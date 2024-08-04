@@ -1,3 +1,5 @@
+import platform
+print("python: " + platform.python_version())  # 3.9.12
 from dataclasses import dataclass
 from llama_cpp import LlamaGrammar, Llama  # Aka lama-cpp-python
 from llm_core.schema import to_json_schema, SchemaConverter  # Aka py-llm-core
@@ -37,7 +39,14 @@ parameters = {
     "max_tokens": 512
 }
 
+
+def prompt(text):
+    system_instruct = "Specify any date in the format YYYY-MM-DD"
+    return f"<|system|>\n{system_instruct}</s>\n" + \
+        f"<|user|>\n{text}</s>\n"
+
+
 # Generate a response from the model
-response_dictionary = model("Napoleon", **parameters)
+response_dictionary = model(prompt("Napoleon"), **parameters)
 response_text = response_dictionary['choices'][0]['text']
 print(response_text)
